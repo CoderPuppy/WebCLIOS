@@ -1,3 +1,3 @@
-[submodule "filesystemJS"]
-	path = js/fs
-	url = git://github.com/drewyoung1/FilesystemJS.git
+[submodule "js/os"]
+	path = js/os
+	url = git://github.com/drewyoung1/js-os/
