@@ -1,0 +1,41 @@
+.cmd-view-output {
+	background: none repeat scroll 0 0 black;
+	border: 1px solid lightgray;
+	border-radius: 3px 3px 3px 3px;
+	color: #00FF00;
+	margin: 0;
+	padding: 2px;
+}
+.run-view {
+	background: none repeat scroll 0 0 darkgrey;
+	border: 1px solid grey;
+	border-radius: 3px 3px 3px 3px;
+	margin-top: 5px;
+	padding: 2px;
+	color: blue;
+}
+.cmd-view {
+	background: none repeat scroll 0 0 darkgrey;
+	border: 2px solid #141414;
+	border-radius: 3px 3px 3px 3px;
+	padding: 2px;
+	color: blue;
+}
+.view > .view-run-cmd > textarea {
+	background: none repeat scroll 0 0 #141414;
+	border: 1px solid grey;
+	color: green;
+}
+body {
+	margin: 0;
+}
+body {
+	background: none repeat scroll 0 0 black;
+	color: white;
+}
+.cmd-view-exit-code {
+	background: none repeat scroll 0 0 white;
+	border-radius: 3px 3px 3px 3px;
+	color: black;
+	float: right;
+}
