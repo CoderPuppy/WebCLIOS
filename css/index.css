@@ -10,9 +10,9 @@
 	background: none repeat scroll 0 0 darkgrey;
 	border: 1px solid grey;
 	border-radius: 3px 3px 3px 3px;
-	margin-top: 5px;
 	padding: 2px;
 	color: blue;
+	margin: 5px 5px 0 5px;
 }
 .cmd-view {
 	background: none repeat scroll 0 0 darkgrey;
@@ -38,4 +38,6 @@ body {
 	border-radius: 3px 3px 3px 3px;
 	color: black;
 	float: right;
+	padding: 0 5px;
+	margin-top: -1px;
 }
