@@ -41,7 +41,8 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 			this.runEl = $('<div>').addClass('view-run-cmd').appendTo(this.el);
 			
 			this.runCMDEl = $('<textarea>').keyup(function() {
-				self.updateAutoComplete();
+				//self.updateAutoComplete(); // Auto complete
+				self.liveParse();
 			}).appendTo(this.runEl);
 			
 			this.runBtnEl = $('<button>').text('Run').click(function() {
@@ -57,7 +58,12 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 		}
 		
 		View.prototype.updateAutoComplete = function updateAutoComplete() {
-			var completions = this.autoCompleter.autoComplete(this.runCMDEl.val(), getCaret(this.runCMDEl[0]), this.terminal);
+			if(!this.parsed) {
+				this.liveParse();
+				return this;
+			}
+			
+			var completions = this.autoCompleter.autoComplete(/*this.runCMDEl.val()*/this.parsed, getCaret(this.runCMDEl[0]), this.terminal);
 			this.autoCompleteEl.text('Autocomplete:');
 			
 			for(var i = 0; i < completions.length; i++) {
@@ -73,12 +79,18 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 			return this;
 		};
 		
+		View.prototype.liveParse = function liveParse() {
+			this.parsed = this.autoCompleter.parse(this.runCMDEl.val());
+			
+			this.updateAutoComplete();
+		};
+		
 		View.prototype.setTerminal = function setTerminal(terminal) {
 			this.terminal = terminal;
 			this.fs = this.terminal.fs;
 			this.currentDir = this.terminal.currentDir;
 			
-			this.updateAutoComplete();
+			this.liveParse();
 		};
 		
 		View.prototype.createRunView = function createRunView(runContext, cmdLine) {
