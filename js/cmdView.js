@@ -29,7 +29,7 @@ define(['require', 'exports', './stream'], function(require, exports, Stream) {
 			
 			this.stream.on('data', function(data) {
 				self.output.push(data);
-				self.outputEl.append((self.outputEl.children().length > 0 ? '<br />' : '') + data);
+				self.outputEl.append((self.outputEl.html().length > 0 ? '<br />' : '') + data);
 			});
 		}
 		
