@@ -4,9 +4,13 @@ define(['require', 'exports', './os/lib/index', './view'], function(requre, expo
 	window.view = view;
 	window.View = view.View;
 	
+	exports.machine = new Machine();
+	exports.view = new View();
+	exports.terminal = exports.machine.createTerminal(exports.view);
+	
+	window.test = exports;
+	
 	$(function() {
-		exports.machine = new Machine();
-		exports.view = new View();
-		exports.terminal = exports.machine.createTerminal(exports.view);
+		exports.view.appendTo(document.body);
 	});
 });
