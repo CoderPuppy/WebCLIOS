@@ -112,7 +112,7 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 					var x = e.screenX;
 					var caret = max((x - (x % width)) / width, this.textContent.length);
 					
-					moveCaret(self.runCMDEl[0], caret);
+					moveCaret(self.runCMDEl[0], caret - 1);
 				}
 			}).appendTo(this.runEl);
 			
@@ -138,8 +138,10 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 				var $t = $(this);
 				
 				if(this == self.el[0]) {
-					self.runCMDEl.css('right', toPx(self.runCMDViewEl.css('right', totalWidthOf(self.runBtnEl[0]) + 'px').css('right')) + 5);
+					self.runCMDEl.css('right', toPx(self.runCMDViewEl.css('right', totalWidthOf(self.runBtnEl[0]) + 4 + 16).css('right')) + 5);
 				}
+				
+				self.runCMDEl[0].focus();
 			});
 			
 			return self = merge(this.el, this);
