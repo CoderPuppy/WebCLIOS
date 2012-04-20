@@ -170,9 +170,21 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 		};
 		
 		View.prototype.liveParse = function liveParse() {
+			var self = this, el = this.runCMDViewEl.text(''), cmdEl;
+			
 			this.parsed = this.autoCompleter.parse(this.runCMDEl.val());
 			
-			this.runCMDViewEl.text(this.parsed.text);
+			// Old code just set the text
+			// this.runCMDViewEl.text(this.parsed.text);
+			
+			this.parsed.forEach(function(cmd) {
+				cmdEl = $('<span>').addClass('cli-cmd-view').appendTo(el);
+				
+				cmdEl.text(cmd.str);
+				cmdEl.html(/^(\s*)/.exec(cmd.str.split('').join(''))[1].replace(/\t/, '    ').replace(/ /g, '&nbsp;') +
+					cmdEl.html() +
+					/(\s*)$/.exec(cmd.str.split('').join(''))[1].replace(/\t/, '    ').replace(/ /g, '&nbsp;'));
+			});
 			
 			this.updateAutoComplete();
 		};
