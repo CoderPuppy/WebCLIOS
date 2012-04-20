@@ -119,6 +119,27 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 			this.runCMDEl = $('<input>').addClass('view-hidden-input').keydown(function() {
 				self.liveParse();
 			}).keyup(function(e) {
+				switch(e.keyCode) {
+					case 13: // Enter
+						self.terminal.runCMD(self.runCMDEl.val());
+						self.runCMDEl.val('');
+						self.liveParse();
+						break;
+					case 37: // Left
+						break;
+					case 38: // Up
+						break;
+					case 39: // Right
+						break;
+					case 40: // Down
+						break;
+					//case !/\w/.test(String.fromCharCode(e.keyCode)):
+					case !/[0-9a-zA-Z]/.test(String.fromCharCode(e.keyCode)):
+					//default:
+						console.log(e.keyCode);
+						break;
+				}
+				
 				self.liveParse();
 			}).appendTo(this.runEl);
 			
