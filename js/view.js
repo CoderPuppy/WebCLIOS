@@ -183,6 +183,7 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 					.click((function(full) {
 						return (function() {
 							this.runCMDEl.val(full);
+							this.liveParse();
 						}).bind(this);
 					}).call(this, completions[i].full)));
 			}
