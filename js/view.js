@@ -103,6 +103,8 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 			// Way to run commands through the browser
 			this.runEl = $('<div>').addClass('view-run-cmd').appendTo(this.el);
 			
+			this.autoCompleteEl = $('<ul>').addClass('autocomplete').text('Autocomplete:').appendTo(this.runEl);
+			
 			this.runCMDViewEl = $('<span>').addClass('view-cmd-view').click(function(e) {
 				self.runCMDEl[0].focus();
 				
@@ -150,8 +152,6 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 			}).appendTo(this.runEl);
 			
 			this.runCMDViewEl.css('right', totalWidthOf(this.runBtnEl[0]));
-			
-			this.autoCompleteEl = $('<ul>').text('Autocomplete:').appendTo(this.runEl);
 			
 			this.autoCompleter = new AutoCompleter(this.terminal);
 			
