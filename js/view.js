@@ -112,28 +112,65 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 				if(this.textContent.length > 0) {
 					var width = textWidth(this.textContent, this.style) / this.textContent.length;
 					var x = e.screenX;
-					var caret = max((x - (x % width)) / width, this.textContent.length);
+					var caret = (x - (x % width)) / width;
 					
-					moveCaret(self.runCMDEl[0], caret - 1);
+					moveCaret(self.runCMDEl[0], ( caret > this.textContent.length ? this.textContent.length : caret - 1 ));
 				}
 			}).appendTo(this.runEl);
 			
+			this.completion = undefined;
+			
 			this.runCMDEl = $('<input>').addClass('view-hidden-input').keydown(function() {
-				self.liveParse();
+				//self.liveParse();
 			}).keyup(function(e) {
+				var liveParse = true;
+				
 				switch(e.keyCode) {
 					case 13: // Enter
-						self.terminal.runCMD(self.runCMDEl.val());
-						self.runCMDEl.val('');
+						if(self.completion) {
+							// Apply completion
+							self.runCMDEl.val(self.completion.full);
+						} else {
+							// Run CMD
+							self.terminal.runCMD(self.runCMDEl.val());
+							self.runCMDEl.val('');
+						}
+						
 						self.liveParse();
 						break;
 					case 37: // Left
+						// Move cursor left
+						liveParse = false;
 						break;
 					case 38: // Up
+						// Select autocomplete
+						liveParse = false;
+						if(self.completionIndex > 0/*self.completions.length - 1*/ || self.completionIndex === undefined) {
+							self.completion = self.completions[
+								self.completionIndex = (typeof(self.completionIndex) == 'undefined' ? self.completions.length : self.completionIndex) - 1
+							];
+						} else {
+							self.completion = self.completions[
+								self.completionIndex = self.completions.length - 1
+							];
+						}
 						break;
 					case 39: // Right
+						// Move cursor right
+						liveParse = false;
 						break;
 					case 40: // Down
+						// Select autocomplete
+						liveParse = false;
+						if(self.completionIndex < self.completions.length - 1) {
+							self.completion = self.completions[++self.completionIndex];
+						} else if(self.completion === undefined && self.completionIndex === undefined) {
+							self.completion = self.completions[
+								self.completionIndex = 0
+							];
+						} else {
+							self.completion = self.completionIndex = undefined;
+						}
 						break;
 					//case !/\w/.test(String.fromCharCode(e.keyCode)):
 					case !/[0-9a-zA-Z]/.test(String.fromCharCode(e.keyCode)):
@@ -142,7 +179,9 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 						break;
 				}
 				
-				self.liveParse();
+				self.selectAutoComplete();
+				
+				if(liveParse) self.liveParse();
 			}).appendTo(this.runEl);
 			
 			this.runBtnEl = $('<button>').addClass('view-run-btn').text('Run').click(function() {
@@ -174,18 +213,21 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 				return this;
 			}
 			
-			var completions = this.autoCompleter.autoComplete(/*this.runCMDEl.val()*/this.parsed, getCaret(this.runCMDEl[0]), this.terminal);
+			this.completion = this.completionIndex = undefined;
+			
+			this.completions = this.autoCompleter.autoComplete(/*this.runCMDEl.val()*/this.parsed, getCaret(this.runCMDEl[0]), this.terminal);
 			this.autoCompleteEl.text('Autocomplete:');
 			
-			for(var i = 0; i < completions.length; i++) {
-				this.autoCompleteEl.append($('<li>')
-					.text(completions[i].name)
+			for(var i = 0; i < this.completions.length; i++) {
+				this.completions[i].el = $('<li>').text(this.completions[i].name)
 					.click((function(full) {
 						return (function() {
 							this.runCMDEl.val(full);
 							this.liveParse();
 						}).bind(this);
-					}).call(this, completions[i].full)));
+					}).call(this, this.completions[i].full))
+					.addClass('completion')
+					.appendTo(this.autoCompleteEl);
 			}
 			
 			return this;
@@ -209,6 +251,13 @@ define(['require', 'exports', './runView', './os/lib/autocomplete'], function(re
 			});
 			
 			this.updateAutoComplete();
+		};
+		
+		View.prototype.selectAutoComplete = function selectAutoComplete() {
+			if(this.completion) {
+				$('.completion.selected', this.el).removeClass('selected');
+				this.completion.el.addClass('selected');
+			}
 		};
 		
 		View.prototype.setTerminal = function setTerminal(terminal) {

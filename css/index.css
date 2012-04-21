@@ -83,3 +83,12 @@ body {
 	border: 1px solid black;
 	border-radius: 3px;
 }
+
+.view-run-cmd > ul > .completion {
+	padding: 2px;
+}
+
+.view-run-cmd > ul > .completion.selected {
+	background: grey;
+	border-radius: 3px;
+}
